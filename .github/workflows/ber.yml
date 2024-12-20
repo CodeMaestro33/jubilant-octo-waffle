@@ -1,0 +1,28 @@
+name: Scheduled Runs at Specific Times
+
+on:
+  schedule:
+    # 3:00 AM and 3:00 PM IST (UTC+5:30)
+    - cron: '30 21,9 * * *'  # Convert 3:00 AM/PM IST to UTC
+    # 3:00 AM and 3:00 PM Berlin Time (CET/CEST UTC+1/UTC+2)
+    - cron: '0 2,14 * * *'   # Convert 3:00 AM/PM Berlin time to UTC
+    # 3:00 AM and 3:00 PM Ohio Time (EST/EDT UTC-5/UTC-4)
+    - cron: '0 8,20 * * *'   # Convert 3:00 AM/PM Ohio time to UTC
+  workflow_dispatch:         # Allow manual triggering of this workflow
+
+jobs:
+  scheduled-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Print scheduled run details
+        run: |
+          echo "This workflow is running at $(date) UTC"
+          echo "Scheduled times: India (IST) 3:00 AM/PM, Berlin 3:00 AM/PM, Ohio 3:00 AM/PM"
+
+      - name: Example Task
+        run: |
+          echo "Perform your task here."
