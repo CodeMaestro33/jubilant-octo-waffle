@@ -1,28 +1,45 @@
-name: Scheduled Runs at Specific Times
+name: Contribute at Specific Times
 
 on:
   schedule:
     # 3:00 AM and 3:00 PM IST (UTC+5:30)
-    - cron: '30 21,9 * * *'  # Convert 3:00 AM/PM IST to UTC
+    - cron: '30 21,9 * * *'  # 3:00 AM/PM IST in UTC
     # 3:00 AM and 3:00 PM Berlin Time (CET/CEST UTC+1/UTC+2)
-    - cron: '0 2,14 * * *'   # Convert 3:00 AM/PM Berlin time to UTC
+    - cron: '0 2,14 * * *'   # 3:00 AM/PM Berlin time in UTC
     # 3:00 AM and 3:00 PM Ohio Time (EST/EDT UTC-5/UTC-4)
-    - cron: '0 8,20 * * *'   # Convert 3:00 AM/PM Ohio time to UTC
+    - cron: '0 8,20 * * *'   # 3:00 AM/PM Ohio time in UTC
   workflow_dispatch:         # Allow manual triggering of this workflow
 
 jobs:
-  scheduled-task:
+  maintain-streak:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Print scheduled run details
+      # Step 2: Configure Git
+      - name: Set up Git config
         run: |
-          echo "This workflow is running at $(date) UTC"
-          echo "Scheduled times: India (IST) 3:00 AM/PM, Berlin 3:00 AM/PM, Ohio 3:00 AM/PM"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "actions@github.com"
 
-      - name: Example Task
+      # Step 3: Modify a file (e.g., README.md)
+      - name: Update a file to create a contribution
         run: |
-          echo "Perform your task here."
+          echo "Last updated: $(date)" >> README.md
+          git add README.md
+
+      # Step 4: Commit changes if there are any
+      - name: Commit changes
+        run: |
+          if [[ $(git status --porcelain) ]]; then
+            git commit -m "Automated update at $(date)"
+          fi
+
+      # Step 5: Push changes to the repository
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
