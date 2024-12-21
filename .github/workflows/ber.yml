@@ -1,36 +1,32 @@
+name: Contribute at Specific Times
+
 on:
   schedule:
-    # 3:00 AM and 3:00 PM IST (UTC+5:30)
+     # 3:00 AM and 3:00 PM IST (UTC+5:30)
     - cron: '30 21,9 * * *'  # 3:00 AM/PM IST in UTC
     # 3:00 AM and 3:00 PM Berlin Time (CET/CEST UTC+1/UTC+2)
     - cron: '0 2,14 * * *'  # 3:00 AM/PM Berlin time in UTC
     # 3:00 AM and 3:00 PM Ohio Time (EST/EDT UTC-5/UTC-4)
     - cron: '0 8,20 * * *'  # 3:00 AM/PM Ohio time in UTC
-  workflow_dispatch:     # Allow manual triggering of this workflow
+  workflow_dispatch:
 
 jobs:
   maintain-streak:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Configure Git
       - name: Set up Git config
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "actions@github.com"
 
-      # Step 3: Ensure a file exists or update a file
-      - name: Create or update streak file
+      - name: Update a file to create a contribution
         run: |
-          touch streak.txt  # Create streak.txt if it doesn't exist
           echo "Last updated: $(date)" >> streak.txt
           git add streak.txt
 
-      # Step 4: Commit changes if there are any
       - name: Commit changes
         run: |
           if [[ $(git status --porcelain) ]]; then
@@ -39,8 +35,8 @@ jobs:
             echo "No changes to commit."
           fi
 
-      # Step 5: Push changes to the repository
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.my_pat }} # Using my_pat
+     
