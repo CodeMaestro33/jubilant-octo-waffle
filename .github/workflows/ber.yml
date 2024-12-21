@@ -1,14 +1,12 @@
-name: Contribute at Specific Times
-
 on:
   schedule:
     # 3:00 AM and 3:00 PM IST (UTC+5:30)
     - cron: '30 21,9 * * *'  # 3:00 AM/PM IST in UTC
     # 3:00 AM and 3:00 PM Berlin Time (CET/CEST UTC+1/UTC+2)
-    - cron: '0 2,14 * * *'   # 3:00 AM/PM Berlin time in UTC
+    - cron: '0 2,14 * * *'  # 3:00 AM/PM Berlin time in UTC
     # 3:00 AM and 3:00 PM Ohio Time (EST/EDT UTC-5/UTC-4)
-    - cron: '0 8,20 * * *'   # 3:00 AM/PM Ohio time in UTC
-  workflow_dispatch:         # Allow manual triggering of this workflow
+    - cron: '0 8,20 * * *'  # 3:00 AM/PM Ohio time in UTC
+  workflow_dispatch:     # Allow manual triggering of this workflow
 
 jobs:
   maintain-streak:
@@ -26,8 +24,9 @@ jobs:
           git config --global user.email "actions@github.com"
 
       # Step 3: Ensure a file exists or update a file
-      - name: Update a file to create a contribution
+      - name: Create or update streak file
         run: |
+          touch streak.txt  # Create streak.txt if it doesn't exist
           echo "Last updated: $(date)" >> streak.txt
           git add streak.txt
 
